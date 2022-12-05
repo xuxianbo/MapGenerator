@@ -5,6 +5,10 @@
         public static Texture2D TextureFromColorMap(Color[] colorMap, int width, int height)
         {
             Texture2D texture = new Texture2D(width, height);
+            // 设置纹理图片的过滤模式（这种模型先 图片不会糊（无过滤模式） 清晰的分明一个一个的）
+            texture.filterMode = FilterMode.Point;
+            texture.wrapMode = TextureWrapMode.Clamp;
+            
             texture.SetPixels(colorMap);
             texture.Apply();
             return texture;
