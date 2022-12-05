@@ -16,7 +16,7 @@ public class MapGenerator : MonoBehaviour
     /// w-1=240      能够被 [2, 4 , 6, 8, 10, 12] 之间的所有数整除
     /// w=241
     /// </summary>
-    private const int mapChunkSize = 241;
+    public const int mapChunkSize = 241;  // 真实生成的网格数会比它小一个  240*240
     [Range(0, 6)]
     public int levelOfDetail;
     
