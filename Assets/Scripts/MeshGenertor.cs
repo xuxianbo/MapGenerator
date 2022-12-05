@@ -10,7 +10,17 @@
             float topLeftX = (width - 1) / -2f;
             float topLeftZ = (height - 1) / 2f;
 
-            int meshSimplificationIncrement = levelOfDetail == 0 ? 1 : levelOfDetail * 2;
+            int meshSimplificationIncrement = (levelOfDetail == 0) ? 1 : levelOfDetail * 2;
+            
+            //===================================================
+            // https://www.youtube.com/watch?v=417kJGPKwDg
+            // 第5分46秒有解释
+            // 0， 1， 2， 3， 4， 5， 6，7，8
+            // 如果levelOfDetail=2    （W-1）/levelOfDetail 来到4时 只有五个顶点 不能构成2个三角形
+            // （0，1，2）一个三角形  （3， 4， 5）一个三角形  要6个顶点才能构成余下的三角形  所有后面要+1   
+            // 公式中的 （w-1）/ 等级 + 1
+            
+            // 顶点行数
             int vertivesPerLine = (width - 1) / meshSimplificationIncrement + 1;
             
             MeshData meshData = new MeshData(vertivesPerLine, vertivesPerLine);
@@ -40,7 +50,6 @@
 
             return meshData;
         }
-        
     }
     
             
