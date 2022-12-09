@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EndlessTerrain: MonoBehaviour
 {
+    private const float scale = 5f;
     private const float viewerMoveThresholdForChunkUpdate = 25f;
     private const float sqrViewerMoveThresholdForChunkUpdate =
         viewerMoveThresholdForChunkUpdate * viewerMoveThresholdForChunkUpdate;
@@ -22,7 +23,7 @@ public class EndlessTerrain: MonoBehaviour
     private int chunkVisibleInViewDst;
 
     private Dictionary<Vector2, TerrainChunk> terrainChunkDIctionary = new Dictionary<Vector2, TerrainChunk>();
-    private List<TerrainChunk> terrainChunksVisibleLastUpdate = new List<TerrainChunk>();
+    static  List<TerrainChunk> terrainChunksVisibleLastUpdate = new List<TerrainChunk>();
     void Start()
     {
         mapGenerator = FindObjectOfType<MapGenerator>();
@@ -36,7 +37,7 @@ public class EndlessTerrain: MonoBehaviour
 
     void Update()
     {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
+        viewerPosition = new Vector2(viewer.position.x, viewer.position.z) / scale;
         // 优化 只有当距离 范围发生设定改变时 重新刷新一次
         if ( (viewerPositionOld-viewerPosition).sqrMagnitude>sqrViewerMoveThresholdForChunkUpdate )
         {
@@ -57,7 +58,7 @@ public class EndlessTerrain: MonoBehaviour
         int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / chunkSize);
         for (int yOffset = -chunkVisibleInViewDst; yOffset <= chunkVisibleInViewDst; yOffset++)
         {
-            for (int xOffset = -chunkVisibleInViewDst; xOffset < chunkVisibleInViewDst; xOffset++)
+            for (int xOffset = -chunkVisibleInViewDst; xOffset <= chunkVisibleInViewDst; xOffset++)
             {
                 Vector2 viewedVhunkCoord =
                     new Vector2(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset);
@@ -65,10 +66,6 @@ public class EndlessTerrain: MonoBehaviour
                 if (terrainChunkDIctionary.ContainsKey(viewedVhunkCoord))
                 {
                     terrainChunkDIctionary[viewedVhunkCoord].UpdateTerrainChunk();
-                    if (terrainChunkDIctionary[viewedVhunkCoord].IsVisible())
-                    {
-                        terrainChunksVisibleLastUpdate.Add(terrainChunkDIctionary[viewedVhunkCoord]);
-                    }
                 }
                 else
                 {
@@ -111,10 +108,12 @@ public class EndlessTerrain: MonoBehaviour
             meshFilter = meshGameObject.AddComponent<MeshFilter>();
             meshRenderer.material = material;
             
-            meshGameObject.transform.position = pos;
+            meshGameObject.transform.position = pos*scale;
             // meshGameObject.transform.localScale = Vector3.one * size / 10f;
             meshGameObject.transform.SetParent(prent);
+            meshGameObject.transform.localScale = Vector3.one *scale;
             SetVisible(false);
+            
             lodMeshes = new LODMesh[this.detailLevels.Length];
             for (int i = 0; i < detailLevels.Length; i++)
             {
@@ -175,6 +174,8 @@ public class EndlessTerrain: MonoBehaviour
                             lodMesh.RequestMesh(mapData);
                         }
                     }
+                    
+                    terrainChunksVisibleLastUpdate.Add(this);
                 }
                 SetVisible(visible);
             }

@@ -10,6 +10,8 @@ public class MapGenerator : MonoBehaviour
 
     public DrawNode drawNode;
 
+    public Noise.NormalizeMode normalizeMode;
+    
     /// <summary>
     /// 应该unity 中单个模型最大定点数 65535个
     /// w<=255
@@ -30,7 +32,7 @@ public class MapGenerator : MonoBehaviour
     public Vector2 Offset;
 
     [Tooltip("模型的高度倍速")]
-    [Range(1, 10)]
+    // [Range(1, 10)]
     public float heightMultiplier;
 
     public AnimationCurve meshHegithCurve;
@@ -43,7 +45,7 @@ public class MapGenerator : MonoBehaviour
     private Queue<MapThreadInfo<MeshData>> meshDataThreadInfosQueue = new Queue<MapThreadInfo<MeshData>>();
     public void DrawMapEditor()
     {
-        MapData mapData = GenerateMap(Vector2.zero);
+        MapData mapData = GenerateMapData(Vector2.zero);
         MapDisplay mapDisplay = FindObjectOfType<MapDisplay>();
         if (drawNode == DrawNode.NoiseMap)
         {
@@ -73,7 +75,7 @@ public class MapGenerator : MonoBehaviour
 
     void MapDataThread(Vector2 center, Action<MapData> callBack)
     {
-        MapData mapData = GenerateMap(center);
+        MapData mapData = GenerateMapData(center);
         lock (mapDataThreadInfosQueue)
         {
             mapDataThreadInfosQueue.Enqueue(new MapThreadInfo<MapData>(callBack, mapData));    
@@ -120,9 +122,9 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    MapData GenerateMap(Vector2 center)
+    MapData GenerateMapData(Vector2 center)
     {
-        float[,] noiseMap = Noise.GenerateNosisMap(mapChunkSize, mapChunkSize, seed, noiseScale, octaves, persistance, lacunarity, center+Offset);
+        float[,] noiseMap = Noise.GenerateNosisMap(mapChunkSize, mapChunkSize, seed, noiseScale, octaves, persistance, lacunarity, center+Offset, normalizeMode);
 
         Color[] colorMap = new Color[mapChunkSize * mapChunkSize];
         for (int y = 0; y < mapChunkSize; y++)
@@ -132,9 +134,12 @@ public class MapGenerator : MonoBehaviour
                 float currHeight = noiseMap[x, y];
                 for (int i = 0; i < Regions.Length; i++)
                 {
-                    if (currHeight<=Regions[i].height)
+                    if (currHeight>=Regions[i].height)
                     {
                         colorMap[y * mapChunkSize + x] = Regions[i].Color;
+                    }
+                    else
+                    {
                         break;
                     }
                 }
