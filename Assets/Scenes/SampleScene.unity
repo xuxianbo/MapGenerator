@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b8612f4b4f3f4f4eaef366b47e35a4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawNode: 2
+  drawNode: 3
   normalizeMode: 0
   editorPreviewLOD: 1
   noiseScale: 25
@@ -274,7 +274,7 @@ MonoBehaviour:
     visibleDstThreshold: 600
   viewer: {fileID: 1203707987}
   mapMaterial: {fileID: 2100000, guid: cd63e6c3d9f39234ead84e6ec579422b, type: 2}
---- !u!43 &951696945
+--- !u!43 &910373678
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -515,7 +515,7 @@ Transform:
   m_GameObject: {fileID: 1200070671}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 33, z: 0}
-  m_LocalScale: {x: 100, y: 1, z: 100}
+  m_LocalScale: {x: 241, y: 1, z: 241}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -685,7 +685,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518605307}
-  m_Mesh: {fileID: 951696945}
+  m_Mesh: {fileID: 910373678}
 --- !u!4 &1518605310
 Transform:
   m_ObjectHideFlags: 0
